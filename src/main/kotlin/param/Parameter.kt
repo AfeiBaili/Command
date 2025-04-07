@@ -3,7 +3,7 @@ package online.afeibaili.param
 class Parameter(
     val name: String,
     val alias: String?,
-    val validator: ((String) -> Boolean)? = null,
+    val validator: ((String, Map<String, Any>) -> Boolean)? = null,
     val isValue: Boolean = true,
     var value: String? = null,
 ) {

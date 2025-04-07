@@ -9,21 +9,21 @@ fun main() {
     var commandSet: CommandSet = CommandSet()
     commandSet.add(
         CommandBuilder()
-            .param(Parameter("add", "a", { it ->
-                println(it)
+            .param(Parameter("add", "a", { c, m ->
+                println(c)
                 true
             }))
             .param(Parameter("list", "l", false))
-            .param(Parameter("alias", "l", { it ->
-                println(it)
+            .param(Parameter("alias", "l", { c, m ->
+                println(c)
                 true
             }))
-            .build { println("成功") }
+            .build { c, m -> println("成功") }
     )
     commandSet.add(
         CommandBuilder()
             .param(Parameter("list", "l", isValue = false))
-            .build { println("第二个命令执行成功") })
+            .build { c, m -> println("第二个命令执行成功") })
 
 
     var array: Array<String> =

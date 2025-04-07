@@ -6,7 +6,8 @@ import online.afeibaili.text.Style
 
 class Command : Iterable<Parameter> {
     var count = 0
-    var executor: ((Command) -> Unit)? = null
+    var executor: ((Command, Map<String, Any>) -> Unit)? = null
+    var context: Map<String, Any> = HashMap()
     private var first: Fragment? = null
     private var last: Fragment? = null
 
@@ -58,7 +59,7 @@ class Command : Iterable<Parameter> {
             if (parameter.isValue
                 && parameter.validator?.let { it ->
                     paramValue = args[paramIndex + 1]
-                    it.invoke(paramValue)
+                    it.invoke(paramValue, context)
                 } == false
             ) {
                 parameter.value = paramValue
@@ -76,7 +77,7 @@ class Command : Iterable<Parameter> {
                     .append("\n\t-> $paramValue")
             }
         }
-        this.executor!!.invoke(this)
+        this.executor!!.invoke(this, context)
         return Message(Message.SUCCESS, 3)
     }
 
