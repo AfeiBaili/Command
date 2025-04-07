@@ -9,7 +9,7 @@ class CommandBuilder {
         return this
     }
 
-    fun build(executor: (Command, Map<String, Any>) -> Unit): Command {
+    fun build(executor: (Command, MutableMap<String, Any>) -> Unit): Command {
         command.executor = executor
         return command
     }

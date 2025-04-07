@@ -6,8 +6,8 @@ import online.afeibaili.text.Style
 
 class Command : Iterable<Parameter> {
     var count = 0
-    var executor: ((Command, Map<String, Any>) -> Unit)? = null
-    var context: Map<String, Any> = HashMap()
+    var executor: ((Command, MutableMap<String, Any>) -> Unit)? = null
+    var context: MutableMap<String, Any> = HashMap()
     private var first: Fragment? = null
     private var last: Fragment? = null
 
