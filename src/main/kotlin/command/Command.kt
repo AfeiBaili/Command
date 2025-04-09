@@ -10,6 +10,7 @@ class Command : Iterable<Parameter> {
     var context: MutableMap<String, Any> = HashMap()
     private var first: Fragment? = null
     private var last: Fragment? = null
+    var otherParam: ArrayList<String>? = null
 
     private inner class Fragment(val value: Parameter, var next: Fragment? = null)
 
@@ -28,6 +29,7 @@ class Command : Iterable<Parameter> {
     fun parse(args: Array<String>): Message {
         var iterator: Iterator<Parameter> = iterator()
         var command: String = args.joinToString(" ")
+        var tempArray: ArrayList<String> = ArrayList()
 
         while (iterator.hasNext()) {
             val parameter = iterator.next()
@@ -40,6 +42,7 @@ class Command : Iterable<Parameter> {
             }
 
             var paramIndex: Int = parameter.findByArray(args)
+            tempArray.add(args[paramIndex])
             var paramCount = 0
             var valueCount = 0
             forEach { it ->
@@ -49,7 +52,7 @@ class Command : Iterable<Parameter> {
                 } else paramCount++
             }
             val errorPoint = if (paramCount + valueCount < args.size) "多余" else "不足"
-            if (args.size != paramCount + valueCount) return Message(Message.ERROR, 1)
+            if (args.size != paramCount + valueCount && otherParam == null) return Message(Message.ERROR, 1)
                 .append("参数$errorPoint：$command", style = Style.RED_COLOR)
                 .append("\n\t-> 需要参数: ${paramCount}个")
                 .append("\n\t-> 需要值: ${valueCount}个")
@@ -59,6 +62,7 @@ class Command : Iterable<Parameter> {
             if (parameter.isValue
                 && parameter.validator?.let { it ->
                     paramValue = args[paramIndex + 1]
+                    tempArray.add(paramValue)
                     it.invoke(paramValue, context)
                 } == false
             ) {
@@ -77,6 +81,7 @@ class Command : Iterable<Parameter> {
                     .append("\n\t-> $paramValue")
             }
         }
+        if (otherParam != null) otherParam = args.subtract(tempArray).toMutableList() as ArrayList<String>
         this.executor!!.invoke(this, context)
         return Message(Message.SUCCESS, 3)
     }

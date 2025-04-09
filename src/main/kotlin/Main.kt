@@ -8,27 +8,16 @@ fun main() {
 
     var commandSet: CommandSet = CommandSet()
     commandSet.add(
-        CommandBuilder()
-            .param(Parameter("add", "a", { c, m ->
-                println(c)
-                true
-            }))
-            .param(Parameter("list", "l", false))
-            .param(Parameter("alias", "l", { c, m ->
-                println(c)
-                true
-            }))
-            .build { c, m -> println("成功") }
+        CommandBuilder().param(Parameter("run", "r", { s, m ->
+            s == "9"
+        })).build({ command, context ->
+            command.otherParam!!.forEach { println(it) }
+        }, ArrayList<String>())
     )
-    commandSet.add(
-        CommandBuilder()
-            .param(Parameter("list", "l", isValue = false))
-            .build { c, m -> println("第二个命令执行成功") })
-
 
     var array: Array<String> =
 
-        "alias 888 list add path"
+        "run 9 -jar xxx.jar"
 
             .trim().split("\\s+".toRegex()).toTypedArray()
 
